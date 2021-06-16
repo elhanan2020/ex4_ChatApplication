@@ -10,6 +10,9 @@ package com.example.ex4.Repository;
 public interface MessagesRepository extends JpaRepository<Messages, Long> {
      List<Messages> findFirst5ByOrderByIdDesc();
      Messages findFirst1ByOrderByIdDesc();
+     List<Messages> findAllByUserName(String NameOfUser);
+     List<Messages> findAllByMessageContains(String message);
+
     /* add here the queries you may need - in addition to CRUD operations
     List<User> findByUserName(String userName);
     List<User> findUserByUserName(String userName);

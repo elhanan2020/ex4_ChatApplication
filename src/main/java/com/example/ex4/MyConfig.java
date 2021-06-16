@@ -1,11 +1,14 @@
 package com.example.ex4;
 
 import com.example.ex4.Bean.Label;
+import com.example.ex4.Filter.LogginAjax;
 import com.example.ex4.Filter.LoggingInterceptor;
 import com.example.ex4.Listener.SessionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -22,15 +25,22 @@ import java.util.concurrent.atomic.AtomicInteger;
   here we register our interceptor class and the session listener
   WebMvcConfigurer allows configuring all of the MVC:
  */
-@EnableWebMvc
+
+
 @Configuration
+@EnableWebMvc
 public class MyConfig implements WebMvcConfigurer {
 
+    @Resource(name = "sessionBean")
+    public Label sessionObj;
+
     @Override
-    public void addInterceptors(InterceptorRegistry registry){
+    public void addInterceptors(InterceptorRegistry registry) {
         // if you want to apply filter only for REST controller: change the "/**" pattern
-        registry.addInterceptor(new LoggingInterceptor()).addPathPatterns("/addMessages","/getUserName","/logOut");
+        registry.addInterceptor(new LoggingInterceptor(sessionObj)).addPathPatterns("/addMessages", "/getUserName", "/logOut");
     }
+
+
     @Bean
     public ServletListenerRegistrationBean<SessionListener> sessionListenerWithMetrics() {
         ServletListenerRegistrationBean<SessionListener> listenerRegBean = new ServletListenerRegistrationBean<>();
@@ -38,17 +48,12 @@ public class MyConfig implements WebMvcConfigurer {
         listenerRegBean.setListener(new SessionListener());
         return listenerRegBean;
     }
-    /*
-    this shows you how to control the static folder where you should put your CSS/JS/images
-    it will be accessible directy, for example  http://localhost:8080/static/some-file-in-static-folder.css
-    So in your html file you can reference all static files as
-         src="/static/yourfile"
 
-    you may also configure this in the application.properties.
-    note: the "/" at the end is required.
-     */
-    /*@Override
-    public void addResourceHandlers( Marshaller.Listener registry) {
-        registry.a(new SessionListener(new AtomicInteger());
-    }*/
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    }
+
+
 }

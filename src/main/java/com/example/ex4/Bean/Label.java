@@ -17,9 +17,19 @@ public class Label  implements Serializable {
     public Label() {
         connected=false;
     }
+
+    @Override
     public String toString() {
-        return label;
+        return "Label{" +
+                "connected=" + connected +
+                ", userName='" + userName + '\'' +
+                ", label='" + label + '\'' +
+                '}';
     }
+
+    /*public String toString() {
+            return label;
+        }*/
     public void setLabel(String l) {
         label = l;
     }

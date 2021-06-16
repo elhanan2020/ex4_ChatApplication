@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalTime;
 
 
@@ -16,7 +17,7 @@ public class  Messages {
 
 
     private String userName;
-
+    @NotEmpty(message = "Name is mandatory")
     private String message;
     private LocalTime time;
 

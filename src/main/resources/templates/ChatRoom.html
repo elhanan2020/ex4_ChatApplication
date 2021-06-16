@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-
     <html lang="en"xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>ChatRoom Pages</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-        <!--<script src="showMessage.js"></script>-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"><!--<script src="showMessage.js"></script>-->
+
         <script>(function () {
             var currentUser = "";
             var lastMessage = 0;
             var lastConnectUser = 0;
-            document.addEventListener('DOMContentLoaded', fetchMessage(),fetchParticipant(),getCurrentUser());
+            document.addEventListener('DOMContentLoaded',  function(){
+                fetchMessage(),
+                fetchParticipant(),
+                getCurrentUser(),
+                document.getElementById("searchButton").addEventListener("click",search)
+            });
 
             function fetchMessage (){
                 fetch("getMessages/"+lastMessage,{
@@ -23,9 +27,12 @@
                     },})
                     .then(res => res.json())
                     .then(resp => {
-                       if(resp.length === 0){
-                           }
-                        else {
+                        if(resp.length === 0){
+                        }
+                        else if(resp[0].disconnect==="isDisconnected") {
+                            window.location.assign("/")
+                        }
+                        else{
                             lastMessage=resp[0].id;
                             var mess = resp.reverse();
                             var message = "";
@@ -87,18 +94,47 @@
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",
                     },})
+                    .then(res => res.json())
                     .then(resp => {
-                        currentUser =resp[0].user;
-                        console.log(resp[0].user);
+                        currentUser =resp.user;
+                        console.log(resp.user);
                     })
                     .catch(e => {
                         document.getElementById("showParticipants").innerHTML = "Some error occured!";
                     });
 
             }
+            function search(){
+                let param = document.getElementById("form1").value;
+                let url ="";
+                if(document.getElementById("flexRadioDefault1").checked)
+                    url ="searchByMessages/";
+                else
+                    url ="searchByUser/";
+                fetch(url+param,{
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },})
+                    .then(res => res.json())
+                    .then(resp => {
+                        let message = "";
+                        if (resp.length > 0) {
+                            for (let item of resp){
+                                message += "<p>" + item.message + "</p>"+"<p>";
 
-        })();
-        </script>
+
+                            }
+                            document.getElementById("showResearch").innerHTML = message;
+                        }
+                    })
+                    .catch(e => {
+                        document.getElementById("showResearch").innerHTML = "Some error occured!";
+                    });
+
+            }
+
+        })();</script>
     </head>
 <body>
 <div class="container">
@@ -110,6 +146,7 @@
      <form action="#" th:action="@{/addMessages}" th:object="${messages}"  method="post">
               <label for="userName" class="col-form-label">
                   <input type="text"  th:field="*{message}" class="form-control" id="userName"  placeholder="Your Message">
+                  <span th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="text-danger"></span>
              </label>
               <button type="submit" class="btn btn-primary mb-2">Send</button>
           </form>
@@ -117,6 +154,28 @@
 
     </div>
     <div id="showParticipants"></div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+        <label class="form-check-label" for="flexRadioDefault1">
+            Search by user
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+        <label class="form-check-label" for="flexRadioDefault2">
+            Search by message
+        </label>
+    </div>
+    <div class="input-group">
+        <div class="form">
+            <input type="search" id="form1" class="form-control"  placeholder="Search"/>
+            <label class="form-label" for="form1"></label>
+        </div>
+        <button type="button" class="btn btn-primary" id="searchButton" required>
+            <i class="fas fa-search"></i>
+        </button>
+        <div id="showResearch"></div>
+    </div>
 
 </div>
 </body>

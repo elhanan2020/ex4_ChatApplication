@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
-
+import java.time.LocalTime;
 
 
 @Entity
@@ -18,9 +18,18 @@ public class User {
     private long id;
     //@UniqueElements(message = "not allowed")
     @NotEmpty(message = "Name is mandatory")
-    //@UniqueElements(message = "the user is already connected")
+
     private String userName;
 
+    public LocalTime getTime() {
+        return time;
+    }
+
+    private LocalTime time;
+
+    public void setTime(LocalTime time) {
+        this.time= time;
+    }
 
     public User() {}
 

@@ -19,33 +19,27 @@ import java.util.Enumeration;
  * HandlerInterceptor but you can receive the bean via the ctor - from the configuration class)
  */
 @EnableWebMvc
-public class LoggingInterceptor implements HandlerInterceptor {
-Label temp;
-    public LoggingInterceptor(Label i) {
-    this.temp = i;
+public class LogginAjax implements HandlerInterceptor {
+
+    public LogginAjax() {
+
     }
-       @Override
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-       //Label temp= (Label) request.getSession().getAttribute("scopedTarget.sessionBean");
-       // location
-
+        Label temp= (Label) request.getSession().getAttribute("scopedTarget.sessionBean");
         if(temp==null||!temp.getConnected()) {
-            response.sendRedirect("/");
+            response.sendRedirect("/disconnected");
             return false;
         }
-       return true;
+        return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, //
-                           Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
+                           Object handler, ModelAndView modelAndView) throws Exception {  }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, //
-                                Object handler, Exception ex) throws Exception {
-    }
-
+                                Object handler, Exception ex) throws Exception {  }
 }
