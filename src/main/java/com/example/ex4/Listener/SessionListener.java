@@ -3,8 +3,6 @@ package com.example.ex4.Listener;
 import com.example.ex4.Bean.Label;
 import com.example.ex4.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -15,7 +13,9 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+/**
+ * its the class that care to handle all event that occure in session
+ */
 @Component
 @WebListener
 public class SessionListener implements HttpSessionListener {

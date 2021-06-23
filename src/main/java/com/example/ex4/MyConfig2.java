@@ -6,14 +6,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * its the class that is configure the filter to ajax request
+ */
 @EnableWebMvc
 @Configuration
 public class  MyConfig2 implements WebMvcConfigurer {
 
-    /*@Override
+    @Override
     public void addInterceptors(InterceptorRegistry registry){
         // if you want to apply filter only for REST controller: change the "/**" pattern
-        System.out.println("iam in MyConfig2");
-        registry.addInterceptor(new LogginAjax()).addPathPatterns("/getMessages/*"*//*,"/getParticipants/*","/searchByMessages/*","/searchByUser/*"*//*);
-    }*/
+        registry.addInterceptor(new LogginAjax()).addPathPatterns("/getMessages/*","/getParticipants/*","/searchByMessages/*","/searchByUser/*");
+    }
 }

@@ -17,17 +17,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * this class is a second controller class that  care to ajax request
+ */
 @RestController
 public class AjaxController {
 
+    /**
+     * here i inject a label class in session
+     */
     @Resource(name = "sessionBean")
     public Label sessionObj;
-
+    /**
+     * here i inject a user class in repository
+     */
     @Autowired
     private UserRepository repository;
+    /**
+     * here i inject a user message in repository
+     */
     @Autowired
     private MessagesRepository mesRepo;
 
+    /**
+     * this requestmapping return a List of message only it was a new message from a user anf  it not new he doesnt send any list
+     * @param productId it get a number of the last message that have
+     * @return
+     */
     @GetMapping(value = "/getMessages/{id}")
     public @ResponseBody    List<Messages> getMessage(@PathVariable("id") int productId){
         User user = repository.findByUserName(sessionObj.getUserName());
@@ -37,7 +53,11 @@ public class AjaxController {
             return  new ArrayList<Messages>();
         return mesRepo.findFirst5ByOrderByIdDesc();
     }
-
+    /**
+     * this requestmapping return a List of user only it was a new message from a user anf  it not new he doesnt send any list
+     * @param productId it get a number of the last user that have in frontend of the application
+     * @return
+     */
     @GetMapping(value = "/getParticipants/{id}")
     public @ResponseBody List<User> getParticipants(@PathVariable("id") int productId){
         List<User> users = repository.findAll();
@@ -50,19 +70,32 @@ public class AjaxController {
         return userToReturn;
     }
 
+    /**
+     * this request mapping return the name of the current user
+     * @return  name user
+     */
     @GetMapping(value="/getUserName")
     public @ResponseBody    HashMap<String, Object> getUserName(){
         HashMap<String, Object> map = new HashMap<>();
         map.put("user", sessionObj.getUserName());
         return map;
     }
+
+    /**
+     * this request return all message from a giving user name
+     * @param nameOfUser some username
+     * @return list of message from some user
+     */
     @GetMapping(value = "/searchByUser/{nameOfUser}")
     public @ResponseBody List<Messages> searchByUser(@PathVariable("nameOfUser") String nameOfUser){
         return mesRepo.findAllByUserName(nameOfUser);
     }
-
+    /**
+     * this request return all message from a giving user name
+    * @return list of message that contain some string
+     */
     @GetMapping(value = "/searchByMessages")
-    public @ResponseBody List<Messages> searchBytext(){
+    public @ResponseBody List<Messages> searchByText(){
         if(sessionObj.isSearchByUser())
             return mesRepo.findAllByUserName(sessionObj.getToSearch());
         return mesRepo.findAllByMessageContains(sessionObj.getToSearch());
@@ -77,3 +110,6 @@ public class AjaxController {
         return myList;
     }
 }
+
+
+

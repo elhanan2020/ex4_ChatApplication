@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalTime;
 
-
+/**
+ * it s the class that is store data for any user in a database
+ */
 @Entity
 public class User {
 

@@ -20,16 +20,14 @@ import java.util.Enumeration;
  */
 @EnableWebMvc
 public class LoggingInterceptor implements HandlerInterceptor {
-Label temp;
+    Label temp;
     public LoggingInterceptor(Label i) {
     this.temp = i;
     }
        @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-       //Label temp= (Label) request.getSession().getAttribute("scopedTarget.sessionBean");
-       // location
-
+        System.out.println("im into");
         if(temp==null||!temp.getConnected()) {
             response.sendRedirect("/");
             return false;

@@ -29,14 +29,14 @@
             }
         document.getElementById("submitButton").removeAttribute("disabled");
         }
-        function  validator2(){
+       /* function  validator2(){
                 let temp = document.getElementById("search").value.trim();
                 if(temp === ""){
                     document.getElementById("searchButton2").setAttribute("disabled","disabled");
                     document.getElementById("form2").value = "";
                 }
             document.getElementById("submitButton").removeAttribute("disabled");
-        }
+        }*/
     (function() {
 
             let lastMessage = 0;
@@ -158,12 +158,14 @@
             }
 
             function searchByUser() {
-                let param = document.getElementById("form1").value;
-                window.location.assign("/showResultOfResearch/search/" + param + "/byUser/" + true);
+                let param = document.getElementById("form1").value.trim();
+                if(param !== "")
+                    window.location.assign("/showResultOfResearch/search/" + param + "/byUser/" + true);
             }
             function searchByMessages() {
-                let param = document.getElementById("form2").value;
-                window.location.assign("/showResultOfResearch/search/" + param + "/byUser/" + false);
+                let param = document.getElementById("form2").value.trim();
+                if(param !== "")
+                    window.location.assign("/showResultOfResearch/search/" + param + "/byUser/" + false);
             }
 
         })();
@@ -465,8 +467,8 @@
                     <div class="input-group">
 
                         <label for="form2"></label><input type="text" placeholder="Search..." name="" id="form2" class="form-control search">
-
-                        <button  onkeyup="validator2()" type="submit" class="input-group-text search_btn" id="searchButton2" disabled><i class="fas fa-search"></i></button>
+                        <!--onkeyup="validator2()"-->
+                        <button   type="submit" class="input-group-text search_btn" id="searchButton2" ><i class="fas fa-search"></i></button>
                         <a href="/logOut" style="text-decoration: none"><span class="input-group-text "><i class="fas fa-sign-out-alt"></i></span></a>
 
                     </div><div class="input-group-prepend ">

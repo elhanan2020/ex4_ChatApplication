@@ -22,12 +22,9 @@ import javax.xml.bind.Unmarshaller;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-/*
-  this is a class for configuring SringMVC
-  here we register our interceptor class and the session listener
-  WebMvcConfigurer allows configuring all of the MVC:
+/**
+ * its the class that is configure the filter to ajax request
  */
-
 
 @Configuration
 @EnableWebMvc
@@ -37,12 +34,10 @@ public class MyConfig implements WebMvcConfigurer {
     @Resource(name = "sessionBean")
     public Label sessionObj;
 
-    /*@Override
+   @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoggingInterceptor(sessionObj)).addPathPatterns("/addMessages", "/getUserName", "/logOut");
+        registry.addInterceptor(new LoggingInterceptor(sessionObj)).addPathPatterns("/showResultOfResearch/**","/addMessages", "/getUserName", "/logOut");
     }
-
-*/
 
     @Qualifier("another bean")
     @Bean

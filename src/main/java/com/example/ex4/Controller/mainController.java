@@ -15,24 +15,40 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+/**
+ * this class is the main controller that care to all request to server that ar enot a ajax request
+ */
 @Controller
 public class mainController {
 
+    /**
+     * here i inject a label class in session
+     */
     @Resource(name = "sessionBean")
     public Label sessionObj;
 
 
-
+    /**
+     * this is a session listener bean
+     */
     @Resource(name="sessionListenerWithMetrics")
     private ServletListenerRegistrationBean<SessionListener> metrics;
 
     @Autowired
     private UserRepository repository;
+
     @Autowired
     private MessagesRepository mesRepo;
 
-    @GetMapping(value={"/","/login"})
-    public String loadingPage(User user ,Messages messages, HttpSession session,Model model) {
+    /**
+     * this request mapping care to the main page of application and many another url in get method
+     * @param user  data about the user request
+     * @param messages some message
+     * @param model some attribute
+     * @return a html  page
+     */
+    @GetMapping(value={"/","/login","/addMessages"})
+    public String loadingPage(User user ,Messages messages,Model model) {
         if(sessionObj.getConnected()){
             model.addAttribute("User", sessionObj.getUserName());
             return "ChatRooms";
@@ -40,6 +56,15 @@ public class mainController {
          return "LoginPage";
     }
 
+    /**
+     * this request mapping get from the user his name and enter it in the data base with the time of his connection
+     * and initialize his session to it connected
+     * @param user data about the current user
+     * @param result if append error
+     * @param model some model
+     * @param message  some message
+     * @return html page
+     */
     @PostMapping(value="/login")
     public String loginPage(@Valid User user, BindingResult result, Model model,Messages message) {
 
@@ -59,8 +84,15 @@ public class mainController {
         return "ChatRooms";
     }
 
+    /**
+     * this request mapping care the request od adding a new message in the chatroom
+     * @param messages somme message
+     * @param model some  model
+     * @param user the data about user
+     * @return html page
+     */
     @PostMapping(value="/addMessages")
-    public String addMessages(Messages messages, Model model, HttpSession session,User user) {
+    public String addMessages(Messages messages, Model model,User user) {
         messages.setUserNames(sessionObj.getUserName());
         messages.setTime(java.time.LocalTime.now());
         mesRepo.save(messages);
@@ -78,7 +110,7 @@ public class mainController {
     }
 
     @GetMapping(value = "/showResultOfResearch/search/{param}/byUser/{true}")
-    public String searchBytext(@PathVariable("param") String text, @PathVariable("true") boolean byUser){
+    public String searchByText(@PathVariable("param") String text, @PathVariable("true") boolean byUser){
         sessionObj.setSearchByUser(byUser);
         sessionObj.setToSearch(text);
         return "searchPage";
