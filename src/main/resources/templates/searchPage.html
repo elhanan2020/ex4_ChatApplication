@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en"xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,6 +13,60 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+    <script> (function () {
+
+        let lastMessage = 0;
+        let lastConnectUser = 0;
+        document.addEventListener('DOMContentLoaded',   function(){
+            fetchSearchMessage(),
+            document.getElementById("toReturn").addEventListener("click",toReturn)
+        });
+
+        function toReturn(){
+            window.location.assign("/");
+        }
+        function fetchSearchMessage (){
+            fetch("/searchByMessages",{
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },})
+                .then(res => res.json())
+                .then(resp => {
+                            document.getElementById("number_message").innerHTML = resp.length+" messages";
+                            let message = "";
+                            if (resp.length > 0) {
+                                for (let item of resp){
+                                   if( item.userName !== localStorage.getItem("currentUser"))
+                                        message += "<div class=\"d-flex justify-content-start mb-4\">\n" +
+                                            "                        <div class=\"msg_cotainer\">\n" +
+                                            item.message +
+                                            "                            <span class=\"msg_time\">"+item.time+"  "+ item.userName +"</span>\n" +
+                                            "                        </div>\n" +
+                                            "                    </div>";
+
+                                    else
+                                        message += "<div class=\"d-flex justify-content-end mb-4\">\n" +
+                                            "                        <div class=\"msg_cotainer_send\">\n" +
+                                            item.message +
+                                            "                            <span class=\"msg_time_send\">"+item.time +"</span>\n" +
+                                            "                        </div>\n" +
+                                            "                    </div>";
+
+                                }
+                                document.getElementById("showResearch").innerHTML = message;
+                            }
+                        })
+                        .catch(e => {
+                            document.getElementById("showResearch").innerHTML = "Some error occurred!";
+                        });
+
+                }
+
+
+    })();
+    </script>
     <style>
         body,html{
             height: 100%;
@@ -73,9 +126,48 @@
             cursor: pointer;
             margin-right: 20px;
         }
-
+        .msg_cotainer{
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10px;
+            border-radius: 25px;
+            background-color: #82ccdd;
+            padding: 10px;
+            position: relative;
+        }
+        .msg_cotainer_send{
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+            border-radius: 25px;
+            background-color: #78e08f;
+            padding: 10px;
+            position: relative;
+        }
+        .msg_time{
+            position: absolute;
+            left: 0;
+            bottom: -15px;
+            color: rgba(255,255,255,0.5);
+            font-size: 10px;
+        }
+        .msg_time_send{
+            position: absolute;
+            right:0;
+            bottom: -15px;
+            color: rgba(255,255,255,0.5);
+            font-size: 10px;
+        }
         .msg_head{
             position: relative;
+        }
+        #action_menu_btn{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
         }
 
         .action_menu ul{
@@ -103,6 +195,7 @@
         }</style>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
 </head>
+
 <body>
 <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
@@ -112,26 +205,19 @@
                 <div class="card-header msg_head">
                     <div class="d-flex bd-highlight">
                         <div class="user_info">
-                            <h1>Welcome  to the ChatRoom application</h1>
+                            <span>Result of research</span>
                             <p id="number_message"></p>
                         </div>
                         <div class="video_cam">
                         </div>
                     </div>
+                    <span id="action_menu_btn"><i id ="toReturn" class="fa fa-reply" aria-hidden="true"></i></span>
 
                 </div>
                 <div class="card-body msg_card_body" >
                     <div id="showResearch">
                     </div>
                     <div class="card-footer">
-                        <form action="#" th:action="@{/login}" th:object="${user}" method="post" >
-                            <label for="userName" class="col-form-label">
-                                <input type="text" th:field="*{userName}" class="form-control" id="userName" placeholder="Name">
-                                <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></span>
-                                <span th:if="${error}"  class="text-danger">this userName is already in used please chose another</span><span th:if="${error}"  class="text-danger">this userName is already in used please chose another</span>
-                            </label>
-                            <button type="submit" class="btn btn-primary mb-2">LogIn</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -140,5 +226,3 @@
 </div>
 </body>
 </html>
-
-

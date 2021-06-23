@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class  MyConfig2 implements WebMvcConfigurer {
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry){
         // if you want to apply filter only for REST controller: change the "/**" pattern
         System.out.println("iam in MyConfig2");
-        registry.addInterceptor(new LogginAjax()).addPathPatterns("/getMessages/*"/*,"/getParticipants/*","/searchByMessages/*","/searchByUser/*"*/);
-    }
+        registry.addInterceptor(new LogginAjax()).addPathPatterns("/getMessages/*"*//*,"/getParticipants/*","/searchByMessages/*","/searchByUser/*"*//*);
+    }*/
 }

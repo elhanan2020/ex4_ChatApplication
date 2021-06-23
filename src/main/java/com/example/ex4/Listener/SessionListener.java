@@ -1,6 +1,9 @@
 package com.example.ex4.Listener;
 
 import com.example.ex4.Bean.Label;
+import com.example.ex4.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -11,18 +14,20 @@ import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicInteger;
-@EnableWebMvc
-@WebListener
+
+
 @Component
+@WebListener
 public class SessionListener implements HttpSessionListener {
 
-
+    @Autowired
+    private UserRepository repository;
 
     private final AtomicInteger activeSessions ;
 
-
     public SessionListener() {
         this.activeSessions = new AtomicInteger(0);
+
     }
 
 
@@ -32,10 +37,11 @@ public class SessionListener implements HttpSessionListener {
          }
 
          public void sessionDestroyed(final HttpSessionEvent event) {
-         System.out.println("sessionDestroyed");
-        activeSessions.decrementAndGet();
+             Label temp = (Label) event.getSession().getAttribute("scopedTarget.sessionBean");
+             if(repository!=null)
+                repository.delete(repository.findByUserName(temp.getUserName()));
+             System.out.println("sessionDestroyed");
+             activeSessions.decrementAndGet();
          }
-
-
 
 }

@@ -9,13 +9,34 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.Serializable;
 
-@Component/*(value="autowiredLabelDependency")*/
+@Component
 public class Label  implements Serializable {
     private boolean connected ;
+
+    public boolean isSearchByUser() {
+        return searchByUser;
+    }
+
+    public void setSearchByUser(boolean searchByUser) {
+        this.searchByUser = searchByUser;
+    }
+
+    private boolean searchByUser ;
     private String userName="";
+    private String toSearch="";
+
+    public String getToSearch() {
+        return toSearch;
+    }
+
+    public void setToSearch(String toSearch) {
+        this.toSearch = toSearch;
+    }
+
     private String label = "Arbitrary Label";
     public Label() {
-        connected=false;
+        searchByUser = false;
+        connected = false;
     }
 
     @Override
@@ -27,9 +48,7 @@ public class Label  implements Serializable {
                 '}';
     }
 
-    /*public String toString() {
-            return label;
-        }*/
+
     public void setLabel(String l) {
         label = l;
     }

@@ -51,16 +51,23 @@ function fetchParticipant (){
             if(resp.length === 0){
             }
             else
-            {console.log("its work well");
-                console.log(resp[resp.length-1].id);
+            {
                 lastConnectUser = resp[resp.length-1].id;
-                var message ="";
-                for (var item of resp)
+                let participants ="";
+                for (let item of resp)
                 {
-                    message += "<p>" + item.userName + "</p>";
+                    participants += "<li>\n" +
+                        "                        <div class=\"d-flex bd-highlight\">\n" +
+                        "                            <div class=\"user_info\">\n" +
+                        "                                <span>" + item.userName +"</span>\n" +
+                       /* "                                <p>Taherah left 7 mins ago</p>\n" +*/
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                    </li>"
+
 
                 }
-                document.getElementById("showParticipants").innerHTML = message;
+                participants.getElementById("showParticipants").innerHTML = participants;
             }
         })
         .catch(e => {

@@ -4,7 +4,9 @@ import com.example.ex4.Bean.Label;
 import com.example.ex4.Filter.LogginAjax;
 import com.example.ex4.Filter.LoggingInterceptor;
 import com.example.ex4.Listener.SessionListener;
+import com.example.ex4.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,16 +33,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EnableWebMvc
 public class MyConfig implements WebMvcConfigurer {
 
+
     @Resource(name = "sessionBean")
     public Label sessionObj;
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // if you want to apply filter only for REST controller: change the "/**" pattern
         registry.addInterceptor(new LoggingInterceptor(sessionObj)).addPathPatterns("/addMessages", "/getUserName", "/logOut");
     }
 
+*/
 
+    @Qualifier("another bean")
     @Bean
     public ServletListenerRegistrationBean<SessionListener> sessionListenerWithMetrics() {
         ServletListenerRegistrationBean<SessionListener> listenerRegBean = new ServletListenerRegistrationBean<>();

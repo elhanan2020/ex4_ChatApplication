@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +44,6 @@ public class AjaxController {
         List<User> userToReturn = new ArrayList<>();
         users.forEach(user ->{
            int time = LocalTime.now().minusSeconds(12).compareTo(user.getTime());
-           System.out.println("l heure maintenant  "+ LocalTime.now()+ "l heure maintenant  - 10second "
-                   + LocalTime.now().minusSeconds(10)+ "la derniere fois quil a fait fetch "+ user.getUserName()+"  "+user.getTime()+ "      "+time);
            if(time <= 0)
                 userToReturn.add(user);
        });
@@ -64,9 +61,12 @@ public class AjaxController {
         return mesRepo.findAllByUserName(nameOfUser);
     }
 
-    @GetMapping(value = "/searchByMessages/{text}")
-    public @ResponseBody List<Messages> searchBytext(@PathVariable("text") String text){
-        return mesRepo.findAllByMessageContains(text);
+    @GetMapping(value = "/searchByMessages")
+    public @ResponseBody List<Messages> searchBytext(){
+        if(sessionObj.isSearchByUser())
+            return mesRepo.findAllByUserName(sessionObj.getToSearch());
+        return mesRepo.findAllByMessageContains(sessionObj.getToSearch());
+
     }
     @GetMapping(value = "/disconnected")
     public @ResponseBody List<HashMap<String, Object>> isDisconnected(){
